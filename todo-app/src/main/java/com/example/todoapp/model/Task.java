@@ -1,10 +1,8 @@
 package com.example.todoapp.model;
 
-import com.fasterxml.jackson.databind.ser.impl.MapEntrySerializer;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "tasks")
@@ -14,7 +12,6 @@ public class Task {
     private int id;
     @NotBlank(message = "Task description must not be blank!")
     private String description;
-    @NotEmpty(message = "Task must be either completed or failed.")
     private boolean done;
 
     public Task() {
