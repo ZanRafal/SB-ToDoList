@@ -19,4 +19,6 @@ public interface TaskRepository {
 
     @RestResource(path = "done", rel = "done")
     List<Task> findByDone(@Param("state") boolean done);
+
+    boolean existsById(Integer id);
 }
