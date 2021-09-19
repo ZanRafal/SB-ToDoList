@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -31,6 +32,20 @@ class TaskController {
     ResponseEntity<List<Task>> readAllTasks(Pageable page) {
         logger.info("Displaying custom pageable!");
         return ResponseEntity.ok(repository.findAll(page).getContent());
+    }
+
+    @GetMapping("tasks/{id}")
+    ResponseEntity<Task> readTask(@PathVariable int id) {
+        return repository.findById(id)
+                .map(task -> ResponseEntity.ok(task))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/tasks")
+    ResponseEntity<Task> createTask(@Valid @RequestBody Task toCreate) {
+        logger.info("Successfully added new task");
+        Task newTask = repository.save(toCreate);
+        return ResponseEntity.created(URI.create("/" + newTask.getId())).body(newTask);
     }
 
     @PutMapping("/tasks/{id}")
