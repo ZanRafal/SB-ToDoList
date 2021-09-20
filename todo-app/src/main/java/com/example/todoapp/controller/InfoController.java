@@ -1,19 +1,17 @@
 package com.example.todoapp.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import com.example.todoapp.TaskConfigurationProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 public class InfoController {
     //Mapowanie propertisów
-    //@Value("${spring.datasource.url}")
-    @Autowired
     private DataSourceProperties dataSource;
-    @Value("${my.property}")
-    private String myProp;
+    private TaskConfigurationProperties myProp;
 
     @GetMapping("/info/url")
     String url() {
@@ -21,8 +19,8 @@ public class InfoController {
     }
 
     @GetMapping("/info/prop")
-    String myPro() {
-        return myProp;
+    boolean myProp() {
+        return myProp.getTemplate().isAllowMultipleTasks();
     }
 
 }
