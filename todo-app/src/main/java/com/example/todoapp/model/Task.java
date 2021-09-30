@@ -3,8 +3,10 @@ package com.example.todoapp.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
@@ -22,12 +24,15 @@ public class Task {
     @Getter
     @Setter
     private LocalDateTime deadline;
+    //@Transient nie chcemy zapisywać tego pola w bazie
+    private LocalDateTime createdOn;
+    private LocalDateTime updatedOn;
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    void setId(int id) {
         this.id = id;
     }
 
@@ -45,6 +50,22 @@ public class Task {
 
     public void setDone(boolean done) {
         this.done = done;
+    }
+
+    public void updateFrom(final Task source) {
+        description = source.description;
+        done = source.done;
+        deadline = source.deadline;
+    }
+
+    @PrePersist//funckcja odpali się przed zapisem do bazy danych, słyży do insertu, zapisu a bazie
+    void prePersist() {
+        createdOn = LocalDateTime.now();
+    }
+
+    @PreUpdate//dokladanie do encji
+    void preMerge() {
+        updatedOn = LocalDateTime.now();
     }
 }
 
