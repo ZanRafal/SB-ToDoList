@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -55,6 +56,19 @@ class TaskController {
         }
         toUpdate.setId(id);
         repository.save(toUpdate);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Transactional// Spring creates a proxy that implements the same interface(s) as the class you're annotating, metoda musi być w beanie i publiczna
+    //po wywołaniu metody task się zmieni i zostanie to zacommitowane do bazy danych
+    //transakcja sie nie wykona gdy poleci wyjątek
+    @PatchMapping("/tasks/{id}")
+    public ResponseEntity<?> toggleTask(@PathVariable int id) {
+        if(!repository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        repository.findById(id).
+                ifPresent(task -> task.setDone(!task.isDone()));
         return ResponseEntity.noContent().build();
     }
 }
