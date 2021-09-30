@@ -54,8 +54,11 @@ class TaskController {
         if(!repository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        toUpdate.setId(id);
-        repository.save(toUpdate);
+        repository.findById(id).
+                ifPresent(task -> {
+                    task.updateFrom(toUpdate);
+                    repository.save(task);
+                });//zamiast @Transactional
         return ResponseEntity.noContent().build();
     }
 
