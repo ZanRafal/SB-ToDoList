@@ -1,20 +1,27 @@
 package com.example.todoapp.model;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tasks")
 @NoArgsConstructor
 public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     @NotBlank(message = "Task description must not be blank!")
     private String description;
     private boolean done;
+    @Column()
+    @Getter
+    @Setter
+    private LocalDateTime deadline;
 
     public int getId() {
         return id;
