@@ -3,10 +3,8 @@ package com.example.todoapp.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
@@ -21,12 +19,16 @@ public class Task {
     private String description;
     private boolean done;
     @Column()
-    @Getter
-    @Setter
     private LocalDateTime deadline;
     //@Transient nie chcemy zapisywać tego pola w bazie
-    private LocalDateTime createdOn;
-    private LocalDateTime updatedOn;
+    @Embedded
+    @AttributeOverrides(//nadpisanie nazw kolumn z klasy dziedziczącej
+            {
+                    @AttributeOverride(column = @Column(name ="updatedOn"), name = "updatedOn"),
+                    @AttributeOverride(column = @Column(name = "createdOn"), name = "createdOn")
+            }
+    )
+    private Audit audit = new Audit();
 
     public int getId() {
         return id;
@@ -44,6 +46,14 @@ public class Task {
         this.description = description;
     }
 
+    public LocalDateTime getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(LocalDateTime deadline) {
+        this.deadline = deadline;
+    }
+
     public boolean isDone() {
         return done;
     }
@@ -56,16 +66,6 @@ public class Task {
         description = source.description;
         done = source.done;
         deadline = source.deadline;
-    }
-
-    @PrePersist//funckcja odpali się przed zapisem do bazy danych, słyży do insertu, zapisu a bazie
-    void prePersist() {
-        createdOn = LocalDateTime.now();
-    }
-
-    @PreUpdate//dokladanie do encji
-    void preMerge() {
-        updatedOn = LocalDateTime.now();
     }
 }
 
