@@ -1,8 +1,6 @@
 package com.example.todoapp.model;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -20,6 +18,9 @@ public class Task {
     private boolean done;
     @Column()
     private LocalDateTime deadline;
+    @ManyToOne//Wiele tasków można dołączyć do jednej grupy
+    @JoinColumn(name = "task_group_id")//Dociąganie grupy do taska
+    private TaskGroup group;
     //@Transient nie chcemy zapisywać tego pola w bazie
     @Embedded
     @AttributeOverrides(//nadpisanie nazw kolumn z klasy dziedziczącej
@@ -62,10 +63,15 @@ public class Task {
         this.done = done;
     }
 
+    Audit getAudit() {
+        return audit;
+    }
+
     public void updateFrom(final Task source) {
         description = source.description;
         done = source.done;
         deadline = source.deadline;
+        group = source.group;
     }
 }
 
