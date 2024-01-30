@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
 @Entity
-@Table(name = "task_group")
+@Table(name = "task_groups")
 @NoArgsConstructor
 public class TaskGroup {
     @Id
@@ -18,10 +18,11 @@ public class TaskGroup {
     private boolean done;
     @Embedded
     private Audit audit = new Audit();
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "group")//jedna grupa idzie to wielu tasków
-    // dociągamy taski do grupy tylko jeśli tego potrzeba
-    // eager dociągamy za każdym razem wszystko
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "group")
     private Set<Task> tasks;
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     public int getId() {
         return id;

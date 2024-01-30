@@ -18,12 +18,11 @@ public class Task {
     private boolean done;
     @Column()
     private LocalDateTime deadline;
-    @ManyToOne//Wiele tasków można dołączyć do jednej grupy
-    @JoinColumn(name = "task_group_id")//Dociąganie grupy do taska
+    @ManyToOne
+    @JoinColumn(name = "task_group_id")
     private TaskGroup group;
-    //@Transient nie chcemy zapisywać tego pola w bazie
     @Embedded
-    @AttributeOverrides(//nadpisanie nazw kolumn z klasy dziedziczącej
+    @AttributeOverrides(
             {
                     @AttributeOverride(column = @Column(name ="updatedOn"), name = "updatedOn"),
                     @AttributeOverride(column = @Column(name = "createdOn"), name = "createdOn")
