@@ -12,6 +12,6 @@ import java.util.List;
 interface SqlTaskGroupRepository extends TaskGroupRepository, JpaRepository<TaskGroup, Integer> {
 
     @Override
-    @Query("from TaskGroup g join fetch g.tasks")//zapytanie na encjach//Pisanie zapytań w formie HQL
+    @Query("from TaskGroup g join fetch g.tasks")
     List<TaskGroup> findAll();
 }
