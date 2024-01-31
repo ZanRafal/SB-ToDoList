@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 @Service
 public class ProjectService {
 
-    private ProjectRepository repository;
-    private TaskGroupRepository taskGroupRepository;
-    private TaskConfigurationProperties config;
+    private final ProjectRepository repository;
+    private final TaskGroupRepository taskGroupRepository;
+    private final TaskConfigurationProperties config;
 
     public ProjectService(ProjectRepository repository, TaskGroupRepository taskGroupRepository, TaskConfigurationProperties config) {
         this.repository = repository;

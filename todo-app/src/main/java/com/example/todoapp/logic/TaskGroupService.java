@@ -5,10 +5,7 @@ import com.example.todoapp.model.TaskGroupRepository;
 import com.example.todoapp.model.TaskRepository;
 import com.example.todoapp.model.projection.GroupReadModel;
 import com.example.todoapp.model.projection.GroupWriteModel;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.annotation.RequestScope;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,8 +14,8 @@ import java.util.stream.Collectors;
 //@RequestScope
 public class TaskGroupService {
 
-    private TaskGroupRepository repository;
-    private TaskRepository taskRepository;
+    private final TaskGroupRepository repository;
+    private final TaskRepository taskRepository;
 
     public TaskGroupService(TaskGroupRepository repository, TaskRepository taskRepository   ) {
         this.repository = repository;
