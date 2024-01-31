@@ -22,4 +22,8 @@ public class Project {
     private Set<TaskGroup> groups;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
     private Set<ProjectStep> steps;
+
+    /*
+    Tu należy pamiętać o tym że ustawianie i zwaracanie kolekcji jest niebezpieczne, należałoby zwracać kopię kolekcji
+     */
 }

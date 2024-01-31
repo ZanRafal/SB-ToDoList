@@ -1,6 +1,8 @@
 package com.example.todoapp.model;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -13,11 +15,15 @@ public class TaskGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+    @Setter
+    @Getter
     @NotBlank(message = "Task groups description must not be blank!")
     private String description;
     private boolean done;
     @Embedded
     private Audit audit = new Audit();
+    @Setter
+    @Getter
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "group")
     private Set<Task> tasks;
     @ManyToOne
@@ -32,14 +38,6 @@ public class TaskGroup {
         this.id = id;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public boolean isDone() {
         return done;
     }
@@ -48,12 +46,5 @@ public class TaskGroup {
         this.done = done;
     }
 
-    public Set<Task> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(Set<Task> tasks) {
-        this.tasks = tasks;
-    }
 }
 

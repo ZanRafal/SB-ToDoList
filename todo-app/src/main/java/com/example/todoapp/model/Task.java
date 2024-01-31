@@ -1,6 +1,8 @@
 package com.example.todoapp.model;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -10,11 +12,14 @@ import java.time.LocalDateTime;
 @Table(name = "tasks")
 @NoArgsConstructor
 public class Task {
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     @NotBlank(message = "Task description must not be blank!")
     private String description;
+    @Setter
+    @Getter
     private boolean done;
     @Column()
     private LocalDateTime deadline;
@@ -30,8 +35,9 @@ public class Task {
     )
     private Audit audit = new Audit();
 
-    public int getId() {
-        return id;
+    public Task(String description, LocalDateTime deadline) {
+        this.description = description;
+        this.deadline = deadline;
     }
 
     void setId(int id) {
@@ -52,14 +58,6 @@ public class Task {
 
     public void setDeadline(LocalDateTime deadline) {
         this.deadline = deadline;
-    }
-
-    public boolean isDone() {
-        return done;
-    }
-
-    public void setDone(boolean done) {
-        this.done = done;
     }
 
     Audit getAudit() {
