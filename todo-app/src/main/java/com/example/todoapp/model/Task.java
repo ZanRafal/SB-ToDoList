@@ -16,11 +16,14 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+    @Setter
+    @Getter
     @NotBlank(message = "Task description must not be blank!")
     private String description;
     @Setter
     @Getter
     private boolean done;
+    @Getter
     @Column()
     private LocalDateTime deadline;
     @ManyToOne
@@ -33,27 +36,22 @@ public class Task {
                     @AttributeOverride(column = @Column(name = "createdOn"), name = "createdOn")
             }
     )
-    private Audit audit = new Audit();
+    private final Audit audit = new Audit();
 
     public Task(String description, LocalDateTime deadline) {
+        this(description, deadline, null);
+    }
+
+    public Task(String description, LocalDateTime deadline, TaskGroup group) {
         this.description = description;
         this.deadline = deadline;
+        if(group != null) {
+            this.group = group;
+        }
     }
 
     void setId(int id) {
         this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDateTime getDeadline() {
-        return deadline;
     }
 
     public void setDeadline(LocalDateTime deadline) {
