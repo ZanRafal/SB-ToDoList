@@ -28,6 +28,8 @@ public class TaskGroup {
     private Set<Task> tasks;
     @ManyToOne
     @JoinColumn(name = "project_id")
+    @Getter
+    @Setter
     private Project project;
 
     public int getId() {
