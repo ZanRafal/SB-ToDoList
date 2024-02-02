@@ -71,6 +71,11 @@ public class TestConfiguration {
             public boolean existsByDoneIsFalseAndGroup_Id(Integer groupId) {
                 return false;
             }
+
+            @Override
+            public void deleteAll() {
+                tasks.clear();
+            }
         };
     }
 }

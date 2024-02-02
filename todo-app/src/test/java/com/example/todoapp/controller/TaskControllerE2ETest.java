@@ -10,6 +10,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -34,6 +35,33 @@ class TaskControllerE2ETest {
 
         Task[] result = restTemplate.getForObject("http://localhost:" + port + "/tasks", Task[].class);
 
+        System.out.println(Arrays.toString(result));
         assertThat(result).hasSize(initialSize + 2);
+    }
+
+    @Test
+    void httpGet_returnsGivenTask() {
+        repository.save(new Task("foo", LocalDateTime.now()));
+
+        Task result = restTemplate.getForObject("http://localhost:" + port + "/tasks/" + 1, Task.class);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getDescription()).isEqualTo("foo");
+        assertThat(result.isDone()).isFalse();
+        assertThat(result.getDeadline()).isBefore(LocalDateTime.now());
+    }
+
+    @Test
+    void httpPost_createsNewTask() {
+        var initialSize = repository.findAll().size();
+        Task task = new Task("foo", LocalDateTime.now());
+
+        Task result = restTemplate.postForObject("http://localhost:" + port + "/tasks", task, Task.class);
+
+        assertThat(initialSize + 1).isEqualTo(repository.findAll().size());
+        assertThat(result).isNotNull();
+        assertThat(result.getDescription()).isEqualTo("foo");
+        assertThat(result.isDone()).isFalse();
+        assertThat(result.getDeadline()).isBefore(LocalDateTime.now());
     }
 }
