@@ -1,15 +1,16 @@
 package com.example.todoapp.model;
 
-import lombok.Getter;
-import lombok.Setter;
-
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "project_steps")
-@Getter
-@Setter
 public class ProjectStep {
 
     @Id
@@ -24,4 +25,36 @@ public class ProjectStep {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
+
+    public int getId() {
+        return id;
+    }
+
+    void setId(int id) {
+        this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getDaysToDeadline() {
+        return daysToDeadline;
+    }
+
+    public void setDaysToDeadline(int daysToDeadline) {
+        this.daysToDeadline = daysToDeadline;
+    }
+
+    Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
 }

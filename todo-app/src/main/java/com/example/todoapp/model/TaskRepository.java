@@ -25,4 +25,8 @@ public interface TaskRepository {
     boolean existsByDoneIsFalseAndGroup_Id(Integer groupId);
 
     void deleteAll();
+
+    List<Task> findAllByGroup_Id(int id);
+
+//    List<Task> findAllByDoneIsFalseAndDeadlineIsNullOrDeadlineIsBeforeOrEqual(LocalDateTime date);
 }

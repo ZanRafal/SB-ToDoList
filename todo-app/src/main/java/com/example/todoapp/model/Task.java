@@ -1,5 +1,6 @@
 package com.example.todoapp.model;
 
+import com.example.todoapp.model.event.TaskEvent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,7 +21,6 @@ public class Task {
     @Getter
     @NotBlank(message = "Task description must not be blank!")
     private String description;
-    @Setter
     @Getter
     private boolean done;
     @Getter
@@ -60,6 +60,11 @@ public class Task {
 
     Audit getAudit() {
         return audit;
+    }
+
+    public TaskEvent toggle() {
+        this.done = !this.done;
+        return TaskEvent.changed(this);
     }
 
     public void updateFrom(final Task source) {

@@ -76,6 +76,11 @@ public class TestConfiguration {
             public void deleteAll() {
                 tasks.clear();
             }
+
+            @Override
+            public List<Task> findAllByGroup_Id(int id) {
+                return null;
+            }
         };
     }
 }

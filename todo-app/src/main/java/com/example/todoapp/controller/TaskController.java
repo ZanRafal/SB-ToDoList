@@ -7,9 +7,18 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -21,6 +30,7 @@ import java.util.List;
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class TaskController {
     private static final Logger logger = LoggerFactory.getLogger(TaskRepository.class);
+    private final ApplicationEventPublisher eventPublisher;
     @NonNull private final TaskRepository repository;
 
     //@RequestMapping(method = RequestMethod.GET, path = "/tasks")
@@ -40,6 +50,12 @@ class TaskController {
     ResponseEntity<List<Task>> readDoneTasks(@RequestParam(defaultValue = "true") boolean state) {
         return ResponseEntity.ok(repository.findByDone(state));
     }
+
+//    @GetMapping("search/today")
+//    ResponseEntity<List<Task>> readTodayTasks() {
+//        var deadline = LocalDate.now().plusDays(1).atStartOfDay();
+//        return ResponseEntity.ok(repository.findAllByDoneIsFalseAndDeadlineIsNullOrDeadlineIsBeforeOrEqual(deadline));
+//    }
 
     @GetMapping("/{id}")
     ResponseEntity<Task> readTask(@PathVariable int id) {
@@ -64,7 +80,7 @@ class TaskController {
                 ifPresent(task -> {
                     task.updateFrom(toUpdate);
                     repository.save(task);
-                });//zamiast @Transactional
+                });
         return ResponseEntity.noContent().build();
     }
 
@@ -76,8 +92,9 @@ class TaskController {
         if(!repository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        repository.findById(id).
-                ifPresent(task -> task.setDone(!task.isDone()));
+        repository.findById(id)
+                .map(Task::toggle)
+                .ifPresent(eventPublisher::publishEvent);
         return ResponseEntity.noContent().build();
     }
 }
