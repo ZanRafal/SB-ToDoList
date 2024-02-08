@@ -7,6 +7,8 @@ import com.example.todoapp.model.projection.ProjectWriteModel;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,16 +25,20 @@ import java.util.List;
 @Controller
 @RequestMapping("/projects")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class ProjectController {
 
     private final ProjectService service;
 
     @GetMapping
-    String showProjects(Model model) {
-        var projectToEdit = new ProjectWriteModel();
-        projectToEdit.setDescription("New project");
-        model.addAttribute("project", projectToEdit);
-        return "projects";
+    String showProjects(Model model, Authentication auth) {
+        if(auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            var projectToEdit = new ProjectWriteModel();
+            projectToEdit.setDescription("New project");
+            model.addAttribute("project", projectToEdit);
+            return "projects";
+        }
+        return "index";
     }
 
     @PostMapping
